@@ -1,10 +1,10 @@
 <template>
   <div class="data-item" :class="className">
-    <p class="data-item-title">{{className}}:</p>
     <p
       class="data-warning"
       v-if="isNewIsinSelected"
     >Warning! new organization has been selected, please hit 'Subscribe' to update.</p>
+    <p class="data-item-title">{{className}}:</p>
     <span :class="isHigher ? 'up' : 'down'">
       <span class="caret"></span>
       {{value}}

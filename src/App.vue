@@ -8,7 +8,11 @@
       <button @click="handleChange" :disabled="!isNewIsinSelected && !isUnsubscribed">Subscribe</button>
     </div>
     <div class="app-hero">
-      <p>You are receiving a continuous updates for</p>
+      <p
+        v-if="isUnsubscribed && !isNewIsinSelected"
+        class="data-unsubscribed"
+      >You are not subscribed to the: {{subscribe.name}}</p>
+      <p v-else>You are {{receiveStatement}} a continuous updates for:</p>
       <div class="app-hero-title">
         <h1>{{subscribe.name}}</h1>
         <small>{{subscribe.isin}}</small>
@@ -22,8 +26,8 @@
         Show bid and Ask values?
         <input id="showBid_Ask" type="checkbox" v-model="showBid_Ask" />
       </label>
-      <DateItem v-if="showBid_Ask" :value="data.bid" :className="'bid'" />
-      <DateItem v-if="showBid_Ask" :value="data.ask" :className="'ask'" />
+      <DateItem v-show="showBid_Ask" :value="data.bid" :className="'bid'" />
+      <DateItem v-show="showBid_Ask" :value="data.ask" :className="'ask'" />
     </div>
     <p v-if="hasError.value">{{hasError.msg}}</p>
     <p v-if="disconnected">{{disconnected}}</p>
@@ -32,6 +36,7 @@
 
 <script>
 import { webSocket } from "../socket";
+import stocksList from "../socket/stocksList";
 import DateItem from "./components/DataItem";
 
 export default {
@@ -41,36 +46,8 @@ export default {
   },
   data() {
     return {
-      stocksList: [
-        {
-          name: "BASF",
-          isin: "DE000BASF111"
-        },
-        {
-          name: "Adidas",
-          isin: "DE000A1EWWW0"
-        },
-        {
-          name: "Private Assets AG",
-          isin: "DE0006051139"
-        },
-        {
-          name: "Apple",
-          isin: "US0378331005"
-        },
-        {
-          name: "Tesla",
-          isin: "US88160R1014"
-        },
-        {
-          name: "Microsoft",
-          isin: "US5949181045"
-        }
-      ],
-      subscribe: {
-        name: "BASF",
-        isin: "DE000BASF111"
-      },
+      stocksList,
+      subscribe: stocksList[0],
       data: {
         price: null,
         bid: null,
@@ -95,6 +72,11 @@ export default {
     unsubscribe() {
       webSocket.send(JSON.stringify({ unsubscribe: this.subscribe.isin }));
       this.isUnsubscribed = true;
+    }
+  },
+  computed: {
+    receiveStatement() {
+      return this.isNewIsinSelected ? "about to receive" : "receiving";
     }
   },
   mounted() {
@@ -154,4 +136,7 @@ export default {
   flex-wrap: wrap
   max-width: 960px
   margin: 0 auto
+  &-unsubscribed
+    margin-top: 50px
+    color: red
 </style>
