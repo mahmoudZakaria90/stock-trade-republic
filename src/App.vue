@@ -12,7 +12,7 @@
         v-if="isUnsubscribed && !isNewIsinSelected"
         class="data-unsubscribed"
       >You are not subscribed to: {{subscribe.name}}</p>
-      <p v-else>You are {{receiveStatement}} a continuous updates for:</p>
+      <p v-else>You are {{receiveStatement}} a continuous updates for {{updateStatement}}</p>
       <div class="app-hero-title">
         <h1>{{subscribe.name}}</h1>
         <small>{{subscribe.isin}}</small>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="data">
-      <DateItem :value="data.price" :isNewIsinSelected="isNewIsinSelected" :className="'price'" />
+      <DateItem :value="data.price" :className="'price'" />
       <label for="showBid_Ask">
         Show bid and Ask values?
         <input id="showBid_Ask" type="checkbox" v-model="showBid_Ask" />
@@ -77,6 +77,11 @@ export default {
   computed: {
     receiveStatement() {
       return this.isNewIsinSelected ? "about to receive" : "receiving";
+    },
+    updateStatement() {
+      return this.isNewIsinSelected
+        ? `${this.subscribe.name}, please hit 'Subscribe' to update.`
+        : ":";
     }
   },
   mounted() {
