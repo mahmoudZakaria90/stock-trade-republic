@@ -5,13 +5,13 @@
       v-if="isNewIsinSelected"
     >Warning! new organization has been selected, please hit 'Subscribe' to update.</p>
     <p class="data-item-title">{{className}}:</p>
-    <span :class="isHigher ? 'up' : 'down'">
+    <div class="data-item-inner" :class="isHigher ? 'up' : 'down'">
       <span class="caret"></span>
-      {{value}}
-    </span>
-    <div>
-      <strong>Change:</strong>
-      {{difference}}
+      <span class="data-item-value">{{value}}</span>
+    </div>
+    <div class="data-item-diff">
+      <strong class="data-item-diff-title">Change:</strong>
+      <span :class="isHigher ? 'up' : 'down'">{{difference}}</span>
     </div>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
   &-item
     flex: 1 0
     margin-bottom: 30px
-    & > span
+    &-inner
       min-width: 220px
       font-weight: 600
       display: inline-block
@@ -67,6 +67,13 @@ export default {
           top: 7px
     &-title
       text-transform: capitalize
+    &-diff
+      &-title
+        margin-right: 5px
+      .up
+        color: green
+      .down
+        color: red
     &.price
       flex-basis: 100%
 

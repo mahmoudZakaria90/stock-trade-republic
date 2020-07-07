@@ -11,7 +11,7 @@
       <p
         v-if="isUnsubscribed && !isNewIsinSelected"
         class="data-unsubscribed"
-      >You are not subscribed to the: {{subscribe.name}}</p>
+      >You are not subscribed to: {{subscribe.name}}</p>
       <p v-else>You are {{receiveStatement}} a continuous updates for:</p>
       <div class="app-hero-title">
         <h1>{{subscribe.name}}</h1>
