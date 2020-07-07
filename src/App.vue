@@ -143,7 +143,7 @@ export default {
       display: block
       width: 100%
   &-hero
-    margin: 50px 0
+    margin: 50px 0 30px
     &-title
       margin-bottom: 20px
       h1
@@ -152,6 +152,6 @@ export default {
 .data
   display: flex
   flex-wrap: wrap
-  max-width: 350px
+  max-width: 960px
   margin: 0 auto
 </style>
