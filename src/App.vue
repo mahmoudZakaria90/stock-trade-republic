@@ -17,26 +17,13 @@
     </div>
 
     <div class="data">
-      <div class="data-item price">
-        <p>Price:</p>
-        <p
-          class="data-warning"
-          v-if="isNewIsinSelected"
-        >Warning! new organization has been selected, please hit 'Subscribe' to update.</p>
-        <span>{{data.price}}</span>
-      </div>
+      <DateItem :value="data.price" :isNewIsinSelected="isNewIsinSelected" :className="'price'" />
       <label for="showBid_Ask">
         Show bid and Ask values?
         <input id="showBid_Ask" type="checkbox" v-model="showBid_Ask" />
       </label>
-      <div v-if="showBid_Ask" class="data-item bid">
-        <p>Bid:</p>
-        <span>{{data.bid}}</span>
-      </div>
-      <div v-if="showBid_Ask" class="data-item ask">
-        <p>Ask:</p>
-        <span>{{data.ask}}</span>
-      </div>
+      <DateItem v-if="showBid_Ask" :value="data.bid" :className="'bid'" />
+      <DateItem v-if="showBid_Ask" :value="data.ask" :className="'ask'" />
     </div>
     <p v-if="hasError.value">{{hasError.msg}}</p>
     <p v-if="disconnected">{{disconnected}}</p>
@@ -45,9 +32,13 @@
 
 <script>
 import { webSocket } from "../socket";
+import DateItem from "./components/DataItem";
 
 export default {
   name: "App",
+  components: {
+    DateItem
+  },
   data() {
     return {
       stocksList: [
@@ -157,22 +148,10 @@ export default {
       margin-bottom: 20px
       h1
         margin-bottom: 0
-    h1
-      line-height:
-  &-data
 
 .data
   display: flex
   flex-wrap: wrap
-
-  &-item
-    flex: 1 0
-    margin-bottom: 30px
-    & > span
-      font-weight: 600
-    &.price
-      flex-basis: 100%
-
-  &-warning
-    color: red
+  max-width: 350px
+  margin: 0 auto
 </style>
