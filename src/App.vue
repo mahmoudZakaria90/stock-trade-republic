@@ -3,7 +3,7 @@
     <div class="app-header">
       <p>Please choose your preferred Stock ISIN</p>
       <select v-model="subscribe" @change="unsubscribe">
-        <option v-for="item in list" :key="item.isin" :value="item">{{item.name}}</option>
+        <option v-for="item in stocksList" :key="item.isin" :value="item">{{item.name}}</option>
       </select>
       <button @click="handleChange" :disabled="!isNewIsinSelected && !isUnsubscribed">Subscribe</button>
     </div>
@@ -38,6 +38,8 @@
         <span>{{data.ask}}</span>
       </div>
     </div>
+    <p v-if="hasError.value">{{hasError.msg}}</p>
+    <p v-if="disconnected">{{disconnected}}</p>
   </div>
 </template>
 
@@ -48,7 +50,7 @@ export default {
   name: "App",
   data() {
     return {
-      list: [
+      stocksList: [
         {
           name: "BASF",
           isin: "DE000BASF111"
@@ -86,7 +88,10 @@ export default {
       showBid_Ask: false,
       isNewIsinSelected: false,
       isUnsubscribed: false,
-      hasError: null,
+      hasError: {
+        value: false,
+        msg: null
+      },
       disconnected: null
     };
   },
@@ -106,16 +111,17 @@ export default {
       webSocket.send(JSON.stringify({ subscribe: this.subscribe.isin }));
     };
     webSocket.onmessage = ({ data }) => {
-      console.log(data);
       this.data = JSON.parse(data);
     };
 
-    webSocket.onerror = e => {
-      console.log(e);
+    webSocket.onerror = err => {
+      const error = new Error(err);
+      this.hasError.msg = error.msg;
+      this.hasError.value = true;
     };
 
     webSocket.onclose = () => {
-      console.log("closed");
+      this.disconnected = "The socket has been closed.";
     };
   },
   watch: {
