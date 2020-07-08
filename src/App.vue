@@ -3,7 +3,7 @@
     <div class="app-header">
       <p>Please choose your preferred Stock ISIN</p>
       <select v-model="subscribe" @change="unsubscribe">
-        <option v-for="item in stocksList" :key="item.isin" :value="item">{{item.name}}</option>
+        <option v-for="item in sortedStocksList" :key="item.isin" :value="item">{{item.name}}</option>
       </select>
       <button @click="handleChange" :disabled="!isNewIsinSelected && !isUnsubscribed">Subscribe</button>
     </div>
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       stocksList,
-      subscribe: stocksList[0],
+      subscribe: stocksList[1],
       data: {
         price: null,
         bid: null,
@@ -87,10 +87,23 @@ export default {
       this.stocksList = this.stocksList.filter(
         ({ name }) => name !== this.subscribe.name
       );
-      this.subscribe = this.stocksList[0];
+      this.subscribe = this.sortedStocksList[0];
     }
   },
   computed: {
+    sortedStocksList() {
+      return this.stocksList.slice(0).sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+    },
     receiveStatement() {
       return this.isNewIsinSelected ? "about to receive" : "receiving";
     },
