@@ -81,6 +81,9 @@ export default {
       this.isUnsubscribed = true;
     },
     removeFromList() {
+      if (this.stocksList.length === 1) {
+        return;
+      }
       this.stocksList = this.stocksList.filter(
         ({ name }) => name !== this.subscribe.name
       );
