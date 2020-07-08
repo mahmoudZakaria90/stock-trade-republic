@@ -14,7 +14,14 @@
       >You are not subscribed to: {{subscribe.name}}</p>
       <p v-else>You are {{receiveStatement}} a continuous updates for {{updateStatement}}</p>
       <div class="app-hero-title">
-        <h1>{{subscribe.name}}</h1>
+        <h1>
+          {{subscribe.name}}
+          <span
+            title="remove from the list."
+            class="data-remove"
+            @click="removeFromList"
+          >&times;</span>
+        </h1>
         <small>{{subscribe.isin}}</small>
       </div>
       <button :disabled="isNewIsinSelected || isUnsubscribed" @click="unsubscribe">Unsubscribe</button>
@@ -72,6 +79,12 @@ export default {
     unsubscribe() {
       webSocket.send(JSON.stringify({ unsubscribe: this.subscribe.isin }));
       this.isUnsubscribed = true;
+    },
+    removeFromList() {
+      this.stocksList = this.stocksList.filter(
+        ({ name }) => name !== this.subscribe.name
+      );
+      this.subscribe = this.stocksList[0];
     }
   },
   computed: {
@@ -134,6 +147,7 @@ export default {
     &-title
       margin-bottom: 20px
       h1
+        position: relative
         margin-bottom: 0
 
 .data
@@ -143,5 +157,10 @@ export default {
   margin: 0 auto
   &-unsubscribed
     margin-top: 50px
+    color: red
+  &-remove
+    font-size: 20px
+    vertical-align: middle
+    cursor: pointer
     color: red
 </style>
